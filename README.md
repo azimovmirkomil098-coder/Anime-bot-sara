@@ -1,25 +1,36 @@
-# Anime Bot Sara
+# Anime Bot Sara — Render Web Service
+
+## Funksiyalar
+- Admin panel faqat `ADMIN_IDS` dagi Telegram foydalanuvchilariga ko‘rinadi.
+- Admin anime qo‘shadi: nomi, unikal kodi, janri, yili, tili, tavsifi va poster.
+- Admin videolarni ketma-ket yuboradi; bot avtomatik qism raqamini beradi. Tugatish: `/done`.
+- Foydalanuvchi kod yozmasdan `📚 Anime katalogi` tugmasi orqali animelarni ko‘radi; sahifalash mavjud.
+- Kanal postida anime ma’lumotlari va `▶️ Animeni ko‘rish` deep-link tugmasi bo‘ladi.
+- Anime ko‘rish va qism yuborishdan oldin majburiy obuna tekshiriladi.
+- Admin post kanallari va majburiy obuna kanallarini boshqaradi.
+- Webhook + HTTP health endpoint: `/health`.
 
 ## Render Web Service sozlamalari
+Repository ichida loyiha `anime_work/` papkasida bo‘lsa:
+- Root Directory: `anime_work`
 
-- Service type: **Web Service**
-- Runtime: **Python 3**
-- Root Directory: `anime_work` (agar GitHub repozitoriyingiz ichida shu papka bo‘lsa; agar fayllar repozitoriy ildizida turgan bo‘lsa, bo‘sh qoldiring)
+Agar `anime_work` ichidagi fayllarni repository rootiga joylagan bo‘lsangiz, Root Directory bo‘sh qolsin.
+
+- Runtime: Python 3
 - Build Command: `pip install -r requirements.txt`
 - Start Command: `python main.py`
 - Health Check Path: `/health`
 
-Render `RENDER_EXTERNAL_URL` va `PORT` qiymatlarini avtomatik beradi. Bot Telegram bilan long polling emas, **webhook** orqali ishlaydi.
-
 ## Environment Variables
+- `BOT_TOKEN` — BotFather tokeni.
+- `ADMIN_IDS` — admin Telegram ID raqamlari, vergul bilan ajratiladi.
+- `DATABASE_PATH` — masalan `anime_bot.db` (doimiy saqlash uchun persistent disk yoki tashqi DB kerak).
+- `WEBHOOK_SECRET` — ixtiyoriy, Telegram webhook uchun maxfiy belgi; bo‘sh bo‘lsa token asosida yaratiladi.
 
-- `BOT_TOKEN` — BotFather tokeni. Maxfiy saqlang; GitHub'ga joylamang.
-- `ADMIN_IDS` — admin Telegram ID raqamlari, vergul bilan ajrating: `123456789,987654321`.
-- `DATABASE_PATH` — `anime_bot.db` (standart). Render bepul Web Service fayl tizimi doimiy emas; restart/deploydan keyin SQLite ma’lumotlari yo‘qolishi mumkin. Doimiy saqlash uchun persistent disk yoki tashqi PostgreSQL kerak.
-- `WEBHOOK_SECRET` — ixtiyoriy, Telegram webhook so‘rovlarini tekshirish siri. Render Blueprint orqali yaratilsa, avtomatik qiymat beriladi. Dashboard'da qo‘lda yaratilgan bo‘lsa, bu o‘zgaruvchini o‘zingiz ham kiritishingiz mumkin; kiritilmasa token asosida barqaror qiymat hosil qilinadi.
+Render Web Service `RENDER_EXTERNAL_URL` va `PORT` qiymatlarini avtomatik beradi. Bot webhook URL ni avtomatik o‘rnatadi.
 
-## Eslatma
-
-- Bot webhook ishlashi uchun Render Web Service ommaviy HTTPS manziliga ega bo‘lishi kerak.
-- Bot majburiy obuna kanallarida admin bo‘lishi kerak.
-- `handlers/__pycache__` kabi Python cache fayllarini GitHub'ga yuklash shart emas.
+## Muhim
+- Bot majburiy obuna kanallarida administrator bo‘lishi kerak, aks holda a’zolikni tekshira olmaydi.
+- Kanalga post yuborish uchun botga post yuborish huquqi berilsin.
+- Bepul Web Service uxlab qolishi mumkin; SQLite fayli doimiy saqlanishi kafolatlanmaydi. Ma’lumotlarni yo‘qotmaslik uchun persistent disk yoki tashqi PostgreSQL ishlating.
+- Faqat tarqatish huquqiga ega bo‘lgan videolarni joylang.

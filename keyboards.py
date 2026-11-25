@@ -1,9 +1,9 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 
 def main_menu(is_admin=False):
-    rows = [[KeyboardButton(text="🔎 Anime qidirish"), KeyboardButton(text="🔥 Top animelar")],
-            [KeyboardButton(text="🎟 Kod orqali topish"), KeyboardButton(text="❤️ Sevimlilar")],
-            [KeyboardButton(text="ℹ️ Yordam")]]
+    rows = [[KeyboardButton(text="📚 Anime katalogi"), KeyboardButton(text="🔎 Anime qidirish")],
+            [KeyboardButton(text="🔥 Top animelar"), KeyboardButton(text="❤️ Sevimlilar")],
+            [KeyboardButton(text="🎟 Kod orqali topish"), KeyboardButton(text="ℹ️ Yordam")]]
     if is_admin: rows.append([KeyboardButton(text="🛠 Admin panel")])
     return ReplyKeyboardMarkup(keyboard=rows, resize_keyboard=True)
 
