@@ -81,12 +81,11 @@ async def continue_post(call: CallbackQuery, state: FSMContext):
     post = data["post"]
     await call.message.answer("👁 <b>Post ko‘rinishi:</b>", parse_mode="HTML")
     await send_content(call.message, post, preview=True)
-    from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
     await call.message.answer(
         f"Tanlangan kanallar: {len(data['selected'])} ta\nPostni yuboraymi?",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="✅ Yuborish", callback_data="post:send"),
-             InlineKeyboardButton(text="❌ Bekor qilish", callback_data="post:cancel")]
+        reply_markup=__import__("aiogram").types.InlineKeyboardMarkup(inline_keyboard=[
+            [__import__("aiogram").types.InlineKeyboardButton(text="✅ Yuborish", callback_data="post:send"),
+             __import__("aiogram").types.InlineKeyboardButton(text="❌ Bekor qilish", callback_data="post:cancel")]
         ])
     )
     await call.answer()
