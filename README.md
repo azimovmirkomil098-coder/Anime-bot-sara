@@ -1,36 +1,25 @@
-# Anime Bot Sara 🇺🇿
+# Anime Bot Sara
 
-O‘zbek tilidagi Telegram anime katalogi va ko‘p kanalli post boshqaruv boti.
+## Render Web Service sozlamalari
 
-## Imkoniyatlar
-- Anime qidirish (Jikan API / MyAnimeList ma’lumotlari)
-- Anime haqida tavsif, janr, yil, reyting va poster
-- Sevimlilar ro‘yxati
-- Anime kodlari orqali katalogdan topish va qismlarni ko‘rish
-- Admin panel orqali anime va qismlar qo‘shish
-- Bir nechta Telegram kanalini qo‘shish/o‘chirish
-- Matn, rasm yoki video bilan post tayyorlash, preview va tanlangan kanallarga yuborish
-- SQLite ma’lumotlar bazasi
+- Service type: **Web Service**
+- Runtime: **Python 3**
+- Root Directory: `anime_work` (agar GitHub repozitoriyingiz ichida shu papka bo‘lsa; agar fayllar repozitoriy ildizida turgan bo‘lsa, bo‘sh qoldiring)
+- Build Command: `pip install -r requirements.txt`
+- Start Command: `python main.py`
+- Health Check Path: `/health`
 
-> Bot anime epizodlarini noqonuniy tarqatmaydi. Katalogga kontentni faqat uni tarqatish huquqiga ega adminlar qo‘shishi kerak.
+Render `RENDER_EXTERNAL_URL` va `PORT` qiymatlarini avtomatik beradi. Bot Telegram bilan long polling emas, **webhook** orqali ishlaydi.
 
-## O‘rnatish
-1. Python 3.10+ o‘rnating.
-2. `pip install -r requirements.txt`
-3. `.env.example` faylidan `.env` nusxa yarating.
-4. `.env` ichida `BOT_TOKEN` va `ADMIN_IDS` ni to‘ldiring.
-5. Botni har bir kanalga administrator qilib qo‘shing (post yuborish huquqi bilan).
-6. `python main.py`
+## Environment Variables
 
-## Admin sozlamalari
-- `ADMIN_IDS`: Telegram numeric ID'lari, vergul bilan ajrating. Masalan: `123456789,987654321`
-- Botda `/admin` yoki **🛠 Admin panel** tugmasi orqali admin panelni oching.
-- Kanal qo‘shish: kanal username (`@kanal`) yoki `-100...` ko‘rinishidagi ID yuboring.
-- Bot kanal admini bo‘lishi kerak.
-- Katalogga anime qo‘shing, keyin anime kodini tanlab qism media faylini yuklang.
-
-## Render
-Render'da **Web Service** yarating va repository'ni ulang. `render.yaml` konfiguratsiyasi Web Service va `/health` sog‘liq tekshiruv endpointini belgilaydi. Environment Variables bo‘limida `BOT_TOKEN` va `ADMIN_IDS` kiriting. Persistent Disk yoqilgan bo‘lishi kerak, aks holda SQLite ma’lumotlari deploy vaqtida yo‘qolishi mumkin.
+- `BOT_TOKEN` — BotFather tokeni. Maxfiy saqlang; GitHub'ga joylamang.
+- `ADMIN_IDS` — admin Telegram ID raqamlari, vergul bilan ajrating: `123456789,987654321`.
+- `DATABASE_PATH` — `anime_bot.db` (standart). Render bepul Web Service fayl tizimi doimiy emas; restart/deploydan keyin SQLite ma’lumotlari yo‘qolishi mumkin. Doimiy saqlash uchun persistent disk yoki tashqi PostgreSQL kerak.
+- `WEBHOOK_SECRET` — ixtiyoriy, Telegram webhook so‘rovlarini tekshirish siri. Render Blueprint orqali yaratilsa, avtomatik qiymat beriladi. Dashboard'da qo‘lda yaratilgan bo‘lsa, bu o‘zgaruvchini o‘zingiz ham kiritishingiz mumkin; kiritilmasa token asosida barqaror qiymat hosil qilinadi.
 
 ## Eslatma
-Jikan API uchinchi tomon xizmati; vaqtinchalik cheklov yoki uzilishlar bo‘lishi mumkin. Bot tokenini hech qachon GitHub'ga yuklamang.
+
+- Bot webhook ishlashi uchun Render Web Service ommaviy HTTPS manziliga ega bo‘lishi kerak.
+- Bot majburiy obuna kanallarida admin bo‘lishi kerak.
+- `handlers/__pycache__` kabi Python cache fayllarini GitHub'ga yuklash shart emas.
