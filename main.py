@@ -2,17 +2,18 @@ import asyncio
 import logging
 import os
 
+from aiohttp import web
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiohttp import web
 
 from config import BOT_TOKEN
 from database import init_db
 from handlers.users import router as users_router
 from handlers.admin import router as admin_router
 from handlers.posts import router as posts_router
+from handlers.catalog import router as catalog_router
 
 
 async def health_check(_request: web.Request) -> web.Response:
@@ -26,7 +27,6 @@ async def main():
     app = web.Application()
     app.router.add_get("/", health_check)
     app.router.add_get("/health", health_check)
-
     runner = web.AppRunner(app)
     await runner.setup()
     port = int(os.getenv("PORT", "10000"))
@@ -37,6 +37,7 @@ async def main():
     bot = Bot(BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher(storage=MemoryStorage())
     dp.include_router(posts_router)
+    dp.include_router(catalog_router)
     dp.include_router(admin_router)
     dp.include_router(users_router)
 
