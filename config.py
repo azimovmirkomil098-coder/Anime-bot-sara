@@ -21,7 +21,6 @@ for _value in _admin_ids_raw.split(","):
         ADMIN_IDS.add(_admin_id)
 
 DATABASE_PATH = os.getenv("DATABASE_PATH", "anime_bot.db").strip() or "anime_bot.db"
-# Expand a leading ~ while keeping relative paths relative to the process working directory.
 DATABASE_PATH = str(Path(DATABASE_PATH).expanduser())
 
 if not BOT_TOKEN or BOT_TOKEN == "PASTE_TELEGRAM_BOT_TOKEN_HERE":

@@ -9,9 +9,7 @@ async def _get_json(path: str, *, params=None):
         async with aiohttp.ClientSession(timeout=timeout) as session:
             async with session.get(f"{JIKAN_URL}{path}", params=params) as response:
                 if response.status == 429:
-                    raise RuntimeError(
-                        "Qidiruv xizmati vaqtincha band. Birozdan keyin urinib ko‘ring."
-                    )
+                    raise RuntimeError("Qidiruv xizmati vaqtincha band. Birozdan keyin urinib ko‘ring.")
                 if response.status >= 500:
                     raise RuntimeError("Anime ma’lumotlari xizmati vaqtincha ishlamayapti.")
                 response.raise_for_status()
@@ -19,8 +17,6 @@ async def _get_json(path: str, *, params=None):
                 return payload.get("data") if isinstance(payload, dict) else None
     except aiohttp.ClientError as exc:
         raise RuntimeError("Anime ma’lumotlari xizmatiga ulanib bo‘lmadi.") from exc
-    except TimeoutError as exc:
-        raise RuntimeError("Anime ma’lumotlari xizmati javob bermadi.") from exc
 
 
 async def search_anime(query: str):

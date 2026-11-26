@@ -30,15 +30,8 @@ Agar loyiha fayllari repository rootida bo‘lsa, Root Directory bo‘sh qolsin.
 
 Render Web Service `RENDER_EXTERNAL_URL` va `PORT` qiymatlarini avtomatik beradi. Bot webhook URL ni avtomatik o‘rnatadi.
 
-## O‘rnatish
-1. `.env.example` faylidan `.env` nusxa yarating va `BOT_TOKEN` hamda `ADMIN_IDS` ni kiriting.
-2. Bog‘liqliklarni o‘rnating: `pip install -r requirements.txt`.
-3. Ishga tushiring: `python main.py`.
-
-> Eslatma: ushbu loyiha webhook rejimida ishlaydi va `RENDER_EXTERNAL_URL` talab qiladi. Lokal ishga tushirish uchun ham ommaviy HTTPS manzili sozlangan bo‘lishi kerak.
-
 ## Muhim
-- Majburiy obuna kanallarida bot administrator bo‘lishi kerak, aks holda a’zolikni tekshira olmaydi. Kanal qo‘shishda `@username` yoki `-100...` ID yuboring; taklif havolasi kanal ID o‘rnida ishlatilmaydi.
+- Majburiy obuna kanallarida bot administrator bo‘lishi kerak, aks holda a’zolikni tekshira olmaydi.
 - Kanalga post yuborish uchun botga post yuborish huquqi berilsin.
-- Bepul Web Service uxlab qolishi mumkin; SQLite fayli doimiy saqlanishi kafolatlanmaydi. Ma’lumotlarni yo‘qotmaslik uchun persistent disk yoki tashqi PostgreSQL ishlating.
+- Bepul Web Service uxlab qolishi mumkin; SQLite fayli doimiy saqlanishi kafolatlanmaydi.
 - Faqat tarqatish huquqiga ega bo‘lgan videolarni joylang.

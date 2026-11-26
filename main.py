@@ -20,33 +20,18 @@ from handlers.posts import router as posts_router
 from handlers.users import router as users_router
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO").upper())
-
 WEBHOOK_PATH = "/telegram/webhook"
 PUBLIC_URL = os.getenv("RENDER_EXTERNAL_URL", "").rstrip("/")
 PORT = int(os.getenv("PORT", "10000"))
 HOST = "0.0.0.0"
 WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET", "").strip()
 if not WEBHOOK_SECRET:
-    # Telegram accepts a hex digest as a webhook secret. Keep local setup simple,
-    # while allowing Render deployments to provide a separately generated secret.
     WEBHOOK_SECRET = hashlib.sha256(BOT_TOKEN.encode("utf-8")).hexdigest()
 
 
 class NavigationResetMiddleware(BaseMiddleware):
-    """Clear an active conversation when the user chooses a new menu section."""
-
-    MENU_TEXTS = {
-        "📚 Anime katalogi",
-        "🔎 Anime qidirish",
-        "🔥 Top animelar",
-        "❤️ Sevimlilar",
-        "🎟 Kod orqali topish",
-        "ℹ️ Yordam",
-        "🛠 Admin panel",
-        "/start",
-        "/admin",
-        "/cancel",
-    }
+    MENU_TEXTS = {"📚 Anime katalogi", "🔎 Anime qidirish", "🔥 Top animelar", "❤️ Sevimlilar",
+                  "🎟 Kod orqali topish", "ℹ️ Yordam", "🛠 Admin panel", "/start", "/admin", "/cancel"}
 
     async def __call__(self, handler, event, data):
         state = data.get("state")
@@ -57,7 +42,6 @@ class NavigationResetMiddleware(BaseMiddleware):
                     await state.clear()
             elif isinstance(event, CallbackQuery):
                 callback_data = event.data or ""
-                # Post selection is one continuous FSM flow; don't reset it here.
                 if callback_data.startswith(("admin:", "catalog:", "browse:", "anime:", "fav:")):
                     await state.clear()
         return await handler(event, data)
@@ -69,15 +53,9 @@ async def health(_request: web.Request) -> web.Response:
 
 async def on_startup(bot: Bot) -> None:
     if not PUBLIC_URL:
-        raise RuntimeError(
-            "RENDER_EXTERNAL_URL topilmadi. Render Web Service muhitida avtomatik berilishi kerak."
-        )
-    await bot.set_webhook(
-        url=f"{PUBLIC_URL}{WEBHOOK_PATH}",
-        secret_token=WEBHOOK_SECRET,
-        allowed_updates=["message", "callback_query"],
-        drop_pending_updates=True,
-    )
+        raise RuntimeError("RENDER_EXTERNAL_URL topilmadi. Render Web Service muhitida avtomatik berilishi kerak.")
+    await bot.set_webhook(url=f"{PUBLIC_URL}{WEBHOOK_PATH}", secret_token=WEBHOOK_SECRET,
+                          allowed_updates=["message", "callback_query"], drop_pending_updates=True)
     logging.info("Webhook o‘rnatildi: %s%s", PUBLIC_URL, WEBHOOK_PATH)
 
 
@@ -85,11 +63,9 @@ async def main() -> None:
     await init_db()
     bot = Bot(BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher(storage=MemoryStorage())
-
     navigation_reset = NavigationResetMiddleware()
     dp.message.outer_middleware(navigation_reset)
     dp.callback_query.outer_middleware(navigation_reset)
-
     dp.include_router(posts_router)
     dp.include_router(catalog_router)
     dp.include_router(admin_router)
@@ -98,10 +74,7 @@ async def main() -> None:
     app = web.Application()
     app.router.add_get("/", health)
     app.router.add_get("/health", health)
-
-    webhook_handler = SimpleRequestHandler(
-        dispatcher=dp, bot=bot, secret_token=WEBHOOK_SECRET
-    )
+    webhook_handler = SimpleRequestHandler(dispatcher=dp, bot=bot, secret_token=WEBHOOK_SECRET)
     webhook_handler.register(app, path=WEBHOOK_PATH)
     setup_application(app, dp, bot=bot)
 
@@ -109,7 +82,6 @@ async def main() -> None:
         await on_startup(bot)
 
     app.on_startup.append(register_webhook)
-
     logging.info("Anime Bot Sara Web Service sifatida ishga tushmoqda.")
     runner = web.AppRunner(app)
     await runner.setup()
