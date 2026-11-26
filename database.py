@@ -23,7 +23,7 @@ async def init_db():
             genre TEXT DEFAULT '', release_year TEXT DEFAULT '', language TEXT DEFAULT '',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)""")
         await db.execute("""CREATE TABLE IF NOT EXISTS anime_episodes (
-            id INTEGER PRIMARY KEY AUTOINCREMENT, anime_code TEXT NOT NOT, episode_no INTEGER NOT NULL CHECK (episode_no > 0),
+            id INTEGER PRIMARY KEY AUTOINCREMENT, anime_code TEXT NOT NULL, episode_no INTEGER NOT NULL CHECK (episode_no > 0),
             media_type TEXT NOT NULL, media_value TEXT NOT NULL,
             UNIQUE(anime_code, episode_no), FOREIGN KEY(anime_code) REFERENCES anime_catalog(code))""")
 
